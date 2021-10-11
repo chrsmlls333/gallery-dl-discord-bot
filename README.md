@@ -1,6 +1,7 @@
 # gallery-dl-discord-bot ✨
-![Version](https://img.shields.io/badge/version-0.1.0-blue.svg?cacheSeconds=2592000)
-![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+![Version](https://img.shields.io/github/package-json/v/chrsmlls333/gallery-dl-discord-bot)
+![License](https://img.shields.io/github/license/chrsmlls333/gallery-dl-discord-bot)
+
 
 > Simple Discord bot to forward URLs to a local installation of gallery-dl. Could be easily repurposed for other local scripts like youtube-dl.
 
