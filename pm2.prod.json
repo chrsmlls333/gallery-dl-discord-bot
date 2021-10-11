@@ -1,0 +1,7 @@
+{
+  "name": "gallery-dl-discord-bot",
+  "script": "src/index.js",
+  "node_args": ["--require", "dotenv/config"],
+  "autorestart": true,
+  "watch": false
+}

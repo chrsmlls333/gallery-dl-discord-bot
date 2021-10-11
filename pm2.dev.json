@@ -1,0 +1,8 @@
+{
+  "name": "gallery-dl-discord-bot",
+  "script": "src/index.js",
+  "node_args": ["--require", "dotenv/config", "--inspect"],
+  "autorestart": true,
+  "watch": true,
+  "ignore_watch": [".git", "node_modules", "logs"]
+}

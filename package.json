@@ -1,0 +1,35 @@
+{
+  "name": "gallery-dl-discord-bot",
+  "version": "0.1.0",
+  "description": "Simple Discord bot to forward URLs to a local installation of gallery-dl.",
+  "main": "src/index.js",
+  "scripts": {
+    "start:basic": "node -r dotenv/config .",
+    "start:debug": "./node_modules/pm2/bin/pm2-runtime pm2.dev.json",
+    "kill:debug": "sudo kill -9 $(sudo lsof -t -i:9229)",
+    "start": "./node_modules/pm2/bin/pm2-runtime pm2.prod.json",
+    "lint": "eslint .",
+    "pug:dev": "pug -w ./src/templates -o ./src/templates/html/ -P"
+  },
+  "author": "Chris Mills",
+  "license": "ISC",
+  "dependencies": {
+    "dayjs": "^1.10.7",
+    "discord.js": "^13.2.0",
+    "dotenv": "^10.0.0",
+    "pm2": "^5.1.2",
+    "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "eslint": "^7.14.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-plugin-import": "^2.24.2",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-react": "^7.26.1",
+    "eslint-plugin-react-hooks": "^4.2.0"
+  },
+  "engines": {
+    "node": "^16.11.0",
+    "npm": "^8.0.0"
+  }
+}

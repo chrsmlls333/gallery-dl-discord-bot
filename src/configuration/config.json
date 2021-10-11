@@ -1,0 +1,13 @@
+{
+    "defaultPrefix": "$",
+
+    "embedColor": [0, 0, 255],
+    "statusMessageDeleteDelay": 7000,
+
+    "htmlDebugPath": "logs/debug.html",
+
+    "botAttribution": {
+        "name": "Ketchum Bot for Discord",
+        "github": "https://github.com/chrsmlls333/ketchum-discord-bot"
+    }
+}
