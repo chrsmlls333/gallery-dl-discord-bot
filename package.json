@@ -12,7 +12,7 @@
     "pug:dev": "pug -w ./src/templates -o ./src/templates/html/ -P"
   },
   "author": "Chris Mills",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "dayjs": "^1.10.7",
     "discord.js": "^13.2.0",
