@@ -39,7 +39,7 @@ commandFiles.forEach(file => {
 });
 
 
-const cooldowns = new Collection();
+// const cooldowns = new Collection();
 
 
 // =========================================
@@ -100,30 +100,30 @@ client.on('messageCreate', async message => {
     return;
   }
 
-  // Handle cooldowns
-  if (!cooldowns.has(command.name)) {
-    cooldowns.set(command.name, new Collection());
-  }
+  // // Handle cooldowns
+  // if (!cooldowns.has(command.name)) {
+  //   cooldowns.set(command.name, new Collection());
+  // }
 
-  const now = Date.now();
-  const timestamps = cooldowns.get(command.name);
-  const cooldownAmount = (command.cooldown || 3) * 1000;
+  // const now = Date.now();
+  // const timestamps = cooldowns.get(command.name);
+  // const cooldownAmount = (command.cooldown || 3) * 1000;
 
-  if (timestamps.has(message.author.id)) {
-    const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
+  // if (timestamps.has(message.author.id)) {
+  //   const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
 
-    if (now < expirationTime) {
-      const timeLeft = (expirationTime - now) / 1000;
-      message.reply({ 
-        content: `please wait ${timeLeft.toFixed(1)} more second(s) before reusing the \`${command.name}\` command.`, 
-        ...utils.doNotNotifyReply,
-      });
-      return;
-    }
-  }
+  //   if (now < expirationTime) {
+  //     const timeLeft = (expirationTime - now) / 1000;
+  //     message.reply({ 
+  //       content: `please wait ${timeLeft.toFixed(1)} more second(s) before reusing the \`${command.name}\` command.`, 
+  //       ...utils.doNotNotifyReply,
+  //     });
+  //     return;
+  //   }
+  // }
   
-  timestamps.set(message.author.id, now);
-  setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
+  // timestamps.set(message.author.id, now);
+  // setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
 
 
   // Finally execute command
