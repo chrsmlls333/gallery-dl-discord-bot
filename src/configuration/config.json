@@ -1,4 +1,9 @@
 {
+    "botAttribution": {
+        "name": "gallery-dl-discord-bot",
+        "github": "https://github.com/chrsmlls333/gallery-dl-discord-bot"
+    },
+    
     "defaultPrefix": "$",
 
     "embedColor": [0, 0, 255],
@@ -6,8 +11,10 @@
 
     "htmlDebugPath": "logs/debug.html",
 
-    "botAttribution": {
-        "name": "Ketchum Bot for Discord",
-        "github": "https://github.com/chrsmlls333/ketchum-discord-bot"
+    "exec": {
+        "command": "gallery-dl -c ./gallery-dl.conf",
+        "options": {
+            "cwd": "/home/chrsm/development/gallery-dl/"
+        }
     }
 }
