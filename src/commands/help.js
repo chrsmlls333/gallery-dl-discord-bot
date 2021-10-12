@@ -1,10 +1,14 @@
 /* eslint-disable curly */
 
-// const { } = require('discord.js');
+const { Constants } = require('discord.js');
+const { ChannelTypes } = Constants;
+
 // const logger = require('winston');
+
 const utils = require('../utils');
 
 const prefix = utils.checkPrefix();
+
 
 module.exports = {
 
@@ -13,9 +17,16 @@ module.exports = {
 
   description: 'List all of my commands or info about a specific command.',
 
-  guildOnly: false,
+  allowedChannelTypes: [
+    ChannelTypes.DM, 
+    ChannelTypes.GROUP_DM,
+    ChannelTypes.GUILD_TEXT,
+    ChannelTypes.GUILD_PUBLIC_THREAD,
+  ],
 
-  args: false,
+  autodetection: false,
+
+  argsMandatory: false,
   usage: '[command name or alias]',
   
   execute(message, args) {
@@ -64,7 +75,7 @@ module.exports = {
       { name: 'Description', value: `${command.description}` },
       // { name: '\u200B', value: '\u200B' },
       { name: 'Usage', value: `${prefix}${command.name}${command.usage ? ` ${command.usage}` : ''}`, inline: usageInline },
-      { name: 'Arguments Required?', value: utils.titleCase(command.args), inline: true },
+      { name: 'Arguments Required?', value: utils.titleCase(command.argsMandatory), inline: true },
     );
     
     return message.channel.send({ embeds: [embed] });

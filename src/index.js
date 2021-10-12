@@ -2,14 +2,17 @@ const {
   Client, 
   Intents, 
   Collection, 
-  Permissions, 
+  Permissions,
+  Constants,
 } = require('discord.js');
+const { ChannelTypes } = Constants;
 
 const fs = require('fs');
 
 const logger = require('./configuration/logConfig');
 
 const utils = require('./utils');
+const { parseArgs } = require('./utils');
 const anonymous = utils.checkAnonymous();
 if (anonymous) logger.info('Running anonymously...');
 const prefix = utils.checkPrefix();
@@ -64,36 +67,54 @@ client.on('guildCreate', guild => {
 
 
 client.on('messageCreate', async message => {
-
   // Check message for basic validity
-  if (
-    !message.content.startsWith(prefix) || 
-    message.author.bot
-  ) return;
-
-  if (!message.partial) { // if not a DM
+  if (message.author.bot) return;
+  if (!message.channel.isText()) return;
+    
+  if (message.channel.type !== ChannelTypes[ChannelTypes.DM]) {
     const perms = await message.channel.permissionsFor(client.user);
     if (!perms.has(Permissions.FLAGS.SEND_MESSAGES)) return;
   }
   
   // Parse command
-  const args = message.content.slice(prefix.length).split(/ +/);
-  const commandName = args.shift().toLowerCase();
-
-  const command = client.commands.get(commandName) ||
-   client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
+  const args = parseArgs(message);
+  if (!args.length) return;
+  let commandNameGuess = null;
+  if (args[0].startsWith(prefix)) {
+    commandNameGuess = args.shift()
+      .slice(prefix.length)
+      .toLowerCase();
+  }
+  
+  // Find command in collection
+  const findCommand = (commandName) => client.commands.get(commandName) ||
+    client.commands.find(cmd => cmd.aliases?.includes(commandName)) || null;
+  let command = findCommand(commandNameGuess);
+  // Find command in DM auto-commands
+  if (message.channel.type === ChannelTypes[ChannelTypes.DM]) { 
+    command ||= client.commands.find(
+      c => (c.autodetectTest ? c.autodetectTest(message) : 0) === true,
+    );
+  }
   if (!command) return;
   
   // Log received command!
-  logger.debug(`${message.guild.name} #${message.channel.name}: '${message.content}'`); 
+  if (message.channel.type === ChannelTypes[ChannelTypes.DM]) {
+    const { tag, username } = message.channel.recipient;
+    logger.debug(`@${username} (${tag}): '${message.content}'`); 
+  } else {
+    logger.debug(`${message.guild.name} #${message.channel.name}: '${message.content}'`); 
+  }
 
-  if (command.guildOnly && message.channel.type !== 'GUILD_TEXT') {
-    message.reply({ content: 'I can\'t execute that command inside DMs!', ...utils.doNotNotifyReply });
+  // Check for allowed use
+  const allowedTypes = command.allowedChannelTypes.map(t => ChannelTypes[t]);
+  if (!allowedTypes.some(t => t === message.channel.type)) {
+    message.reply({ content: 'I can\'t execute that command here!', ...utils.doNotNotifyReply });
     return;
   }
 
   // Handle no args
-  if (command.args && !args.length) {
+  if (command.argsMandatory && !args.length) {
     let reply = `You didn't provide any arguments, ${message.author.username}!`;
     if (command.usage) reply += `\nThe proper usage would be: \`${prefix}${command.name}${command.usage ? ` ${command.usage}` : ''}\``;
     message.reply({ content: reply, ...utils.doNotNotifyReply });

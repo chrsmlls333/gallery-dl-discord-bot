@@ -1,4 +1,6 @@
-// const { } = require('discord.js');
+const { Constants } = require('discord.js');
+const { ChannelTypes } = Constants;
+
 // const logger = require('winston');
 
 const utils = require('../utils');
@@ -11,9 +13,16 @@ module.exports = {
 
   description: 'Get a link for inviting this bot to another server you have Manage Server permissions on...',
 
-  guildOnly: false,
+  allowedChannelTypes: [
+    ChannelTypes.DM, 
+    ChannelTypes.GROUP_DM,
+    ChannelTypes.GUILD_TEXT,
+    ChannelTypes.GUILD_PUBLIC_THREAD,
+  ],
 
-  args: false,
+  autodetection: false,
+
+  argsMandatory: false,
   usage: null,
   
   execute(message) {

@@ -39,6 +39,24 @@ const utils = {
   }),
 
 
+  // Parsing Command Arguments
+
+  parseArgs: (message, command = null) => {
+    if (!message) return [];
+    const args = message.content.split(/ +/);
+    if (command === null) return args; // common exit
+    
+    const prefix = utils.checkPrefix();
+    const { name } = command;
+    if (!name) return args;
+    if (args[0].toLowerCase() === (prefix + name).toLowerCase()) {
+      args.shift();
+      return args;
+    }
+    return args;
+  },
+
+
   // Parsing Mentions
 
   CHAN_REGEX: /^<#(\d+)>$/,
