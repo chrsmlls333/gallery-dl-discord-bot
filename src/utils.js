@@ -1,18 +1,22 @@
 const { MessageEmbed, Permissions } = require('discord.js');
+
+const logger = require('./configuration/logConfig');
+
 const { defaultPrefix, embedColor, botAttribution } = require('./configuration/config.json');
+
 
 const utils = {
 
   // check Prefix setting
 
-  checkPrefix: () => {
+  getPrefix: () => {
     const p = process.env.PREFIX || defaultPrefix;
     return p;
   },
 
   // check Anonymous Mode
 
-  checkAnonymous: () => {
+  getAnonymous: () => {
     let a = process.env.ANONYMOUS || false;
     if (typeof a === 'string') {
       if (a.toLowerCase() === 'false' ||
@@ -21,6 +25,16 @@ const utils = {
       }
     }
     return a;
+  },
+
+  // check Allowed User
+
+  getAllowedUserId: () => {
+    const id = process.env.ALLOWED_USER_ID || null;
+    if (id == null) {
+      logger.warn('No ALLOWED_USER_ID environment variable, operating dangerously.');
+    }
+    return id;
   },
 
   // Get Invite // Set permissions here
@@ -46,7 +60,7 @@ const utils = {
     const args = message.content.split(/ +/);
     if (command === null) return args; // common exit
     
-    const prefix = utils.checkPrefix();
+    const prefix = utils.getPrefix();
     const { name } = command;
     if (!name) return args;
     if (args[0].toLowerCase() === (prefix + name).toLowerCase()) {
@@ -126,7 +140,7 @@ const utils = {
       .setAuthor(client.user.username, client.user.avatarURL())
       .setColor(embedColor)
       .setTimestamp();
-    if (!utils.checkAnonymous()) {
+    if (!utils.getAnonymous()) {
       embed.setAuthor(client.user.username, client.user.avatarURL(), botAttribution.github);
       embed.setFooter(botAttribution.name);
     }

@@ -7,7 +7,7 @@ const { ChannelTypes } = Constants;
 
 const utils = require('../utils');
 
-const prefix = utils.checkPrefix();
+const prefix = utils.getPrefix();
 
 
 module.exports = {

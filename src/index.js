@@ -13,9 +13,10 @@ const logger = require('./configuration/logConfig');
 
 const utils = require('./utils');
 const { parseArgs } = require('./utils');
-const anonymous = utils.checkAnonymous();
+const anonymous = utils.getAnonymous();
 if (anonymous) logger.info('Running anonymously...');
-const prefix = utils.checkPrefix();
+const prefix = utils.getPrefix();
+const userId = utils.getAllowedUserId();
 
 
 // =========================================
@@ -70,6 +71,8 @@ client.on('messageCreate', async message => {
   // Check message for basic validity
   if (message.author.bot) return;
   if (!message.channel.isText()) return;
+
+  if (userId !== null && message.author.id !== userId) return; 
     
   if (message.channel.type !== ChannelTypes[ChannelTypes.DM]) {
     const perms = await message.channel.permissionsFor(client.user);
