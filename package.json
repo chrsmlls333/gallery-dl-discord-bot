@@ -5,9 +5,9 @@
   "main": "src/index.js",
   "scripts": {
     "start:basic": "node -r dotenv/config .",
+    "start": "./node_modules/pm2/bin/pm2-runtime pm2.prod.json",
     "start:debug": "./node_modules/pm2/bin/pm2-runtime pm2.dev.json",
     "kill:debug": "sudo kill -9 $(sudo lsof -t -i:9229)",
-    "start": "./node_modules/pm2/bin/pm2-runtime pm2.prod.json",
     "lint": "eslint .",
     "pug:dev": "pug -w ./src/templates -o ./src/templates/html/ -P"
   },
