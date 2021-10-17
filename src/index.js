@@ -43,9 +43,6 @@ commandFiles.forEach(file => {
 });
 
 
-// const cooldowns = new Collection();
-
-
 // =========================================
 
 client.on('ready', async () => {
@@ -123,32 +120,6 @@ client.on('messageCreate', async message => {
     message.reply({ content: reply, ...utils.doNotNotifyReply });
     return;
   }
-
-  // // Handle cooldowns
-  // if (!cooldowns.has(command.name)) {
-  //   cooldowns.set(command.name, new Collection());
-  // }
-
-  // const now = Date.now();
-  // const timestamps = cooldowns.get(command.name);
-  // const cooldownAmount = (command.cooldown || 3) * 1000;
-
-  // if (timestamps.has(message.author.id)) {
-  //   const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
-
-  //   if (now < expirationTime) {
-  //     const timeLeft = (expirationTime - now) / 1000;
-  //     message.reply({ 
-  //       content: `please wait ${timeLeft.toFixed(1)} more second(s) before reusing the \`${command.name}\` command.`, 
-  //       ...utils.doNotNotifyReply,
-  //     });
-  //     return;
-  //   }
-  // }
-  
-  // timestamps.set(message.author.id, now);
-  // setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
-
 
   // Finally execute command
   try {
