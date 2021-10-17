@@ -153,6 +153,7 @@ client.on('messageCreate', async message => {
   // Finally execute command
   try {
     logger.debug('Execute!');
+    message.channel.sendTyping();
     await command.execute(message, args);
   } catch (error) {
     // if (error.message) logger.error(error.message);
