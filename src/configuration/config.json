@@ -12,7 +12,7 @@
     "htmlDebugPath": "logs/debug.html",
 
     "exec": {
-        "command": "gallery-dl -c ./gallery-dl.conf",
+        "command": "gallery-dl -c ./gallery-dl.conf --no-skip",
         "options": {
             "cwd": "/home/chrsm/development/gallery-dl/"
         }
