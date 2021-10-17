@@ -1,3 +1,5 @@
+/* eslint-disable no-await-in-loop */
+
 const { 
   Client, 
   Intents, 
@@ -12,7 +14,7 @@ const fs = require('fs');
 const logger = require('./configuration/logConfig');
 
 const utils = require('./utils');
-const { parseArgs } = require('./utils');
+const { parseArgs, sleep } = require('./utils');
 const anonymous = utils.getAnonymous();
 if (anonymous) logger.info('Running anonymously...');
 const prefix = utils.getPrefix();
@@ -45,26 +47,7 @@ commandFiles.forEach(file => {
 
 // =========================================
 
-client.on('ready', async () => {
-  logger.info(`I am ready! Logged in as ${client.user.tag}!`);
-  logger.info(`Bot has started, with ${client.users.cache.size} users, in ${client.channels.cache.size} channels of ${client.guilds.cache.size} guilds.`); 
-
-  // client.user.setActivity('the upright organ');
-  const link = utils.generateInvite(client);
-  logger.info(`Generated bot invite link: ${link}`);
-});
-
-
-client.on('guildCreate', guild => {
-  const embed = utils.embedTemplate(client)
-    .setTitle('Thanks for adding me to your server!')
-    .setDescription(`I'm a downloader bot which can pull attachments and embeds into a big list to download later. \n\nFor a list of commands, send \`${prefix}help [command name]\` here or in your server!`);
-  return guild.fetchOwner()
-    .then(member => member.send({ embeds: [embed] }));
-});
-
-
-client.on('messageCreate', async message => {
+const messageCreate = async message => {
   // Check message for basic validity
   if (message.author.bot) return;
   if (!message.channel.isText()) return;
@@ -136,6 +119,45 @@ client.on('messageCreate', async message => {
     });
   }
 
+};
+client.on('messageCreate', messageCreate);
+
+
+// =========================================
+
+client.on('ready', async () => {
+  logger.info(`I am ready! Logged in as ${client.user.tag}!`);
+  logger.info(`Bot has started, with ${client.users.cache.size} users, in ${client.channels.cache.size} channels of ${client.guilds.cache.size} guilds.`); 
+
+  const link = utils.generateInvite(client);
+  logger.info(`Generated bot invite link: ${link}`);
+
+  // Detect missed messages.
+  await sleep(500);
+  const mainUser = await client.users.fetch(userId);
+  const mainUserDMChannel = await mainUser.createDM();
+  if (!mainUserDMChannel) return;
+  const directMessages = await mainUserDMChannel.messages.fetch();
+  const sentByBot = (message) => message.author.equals(client.user);
+  if (!sentByBot(directMessages.first())) {
+    await mainUserDMChannel.send('Just spinning back up over here, it seems I missed some messages. Processing now.');
+    logger.info('Picking up some missed messages...');
+  }
+  // eslint-disable-next-line no-restricted-syntax
+  for (const [, message] of directMessages) {
+    if (sentByBot(message)) break;
+    await messageCreate(message);
+    await sleep(3000);
+  }
+});
+
+
+client.on('guildCreate', guild => {
+  const embed = utils.embedTemplate(client)
+    .setTitle('Thanks for adding me to your server!')
+    .setDescription(`I'm a downloader bot which can pull attachments and embeds into a big list to download later. \n\nFor a list of commands, send \`${prefix}help [command name]\` here or in your server!`);
+  return guild.fetchOwner()
+    .then(member => member.send({ embeds: [embed] }));
 });
 
 // client.on("debug", function(info){
